@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="content">
+
+    <div class="row">
+        <div class="page-header">
+            <h2><a href="/">Home</a>&nbsp;&nbsp;>&nbsp;&nbsp;프로젝트 관리</h2>
+        </div>
+    </div>
+    <div class="row">
+        <form action="{% url 'equipment:pjt_list' %}" method="get" id="list_form">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="active">프로젝트명</td>
+                    <td>
+                        <input type="text" class="form-control" id="project_name" name="project_name" value="{{ request.GET.project_name }}" placeholder="프로젝트명" maxlength="20">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div align="right">
+        <button type="button" class="btn btn-primary" id="project_addform">프로젝트 등록</button>
+        <button type="button" class="btn btn-primary" id="project_list">검색</button>
+    </div>
+
+    <div class="row">
+        <br/>
+        <div align="center">총 {{ total_count }} 건이 검색되었습니다.</div>
+        <br/>
+        <table class="table table-hover">
+            <thead>
+                <th width="25%">프로젝트명</th>
+                <th width="25%">시작일</th>
+                <th width="25%">종료일</th>
+                <th width="25%">수정</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        {% include page_template %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <form action="" method="post" id="register_form">
+                    {#                    {% csrf_token %}#}
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <td class="active">프로젝트명</td>
+                                <td colspan="3">
+                                    <input type="hidden" class="form-control" id="modal_project_id" name="modal_project_id" value="">
+                                    <input type="text" class="form-control" id="modal_project_name" name="modal_project_name" value="" placeholder="프로젝트명" maxlength="30">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="active">시작일</td>
+                                <td><input type="text" class="form-control" id="modal_start_ymd" name="modal_start_ymd" value="" placeholder="yyyy-MM-dd" maxlength="10"></td>
+                                <td class="active">종료일</td>
+                                <td><input type="text" class="form-control" id="modal_end_ymd" name="modal_end_ymd" value="" placeholder="yyyy-MM-dd" maxlength="10"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="project_upd">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="{% static 'equipment/equipment.js' %}"></script>
+<script src="{% static 'equipment/ext/el-pagination.js' %}"></script>
+<script>
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        paginateOnScrollMargin: 10,
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $(document).on("click", "#project_addform", project_addform);
+        $(document).on("click", "#project_list", project_list);
+        $(document).on("click", "#project_updform", project_updform);
+        $(document).on("click", "#project_upd", project_upd);
+    });
+    var project_addform = function () {
+        location.href = "{% url 'equipment:pjt_addform' %}"
+    };
+    var project_list = function () {
+        $("#list_form").submit();
+    };
+</script>
+
+{% endblock %}

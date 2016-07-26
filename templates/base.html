@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/i18n/defaults-ko_KR.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/additional-methods.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/localization/messages_ko.js"></script>
+
+    {% load staticfiles %}
+{#    <link rel="stylesheet" href="{% static 'equipment/ext/bootstrap.min.css' %}">#}
+{#    <script src="{% static 'equipment/ext/jquery.min.js' %}"></script>#}
+{#    <script src="{% static 'equipment/ext/bootstrap.min.js' %}"></script>#}
+{#    <link rel="stylesheet" href="{% static 'equipment/ext/bootstrap-select.min.css' %}">#}
+{#    <script src="{% static 'equipment/ext/bootstrap-select.min.js' %}"></script>#}
+{#    <script src="{% static 'equipment/ext/defaults-ko_KR.min.js' %}"></script>#}
+{#    <script src="{% static 'equipment/ext/jquery.validate.min.js' %}"></script>#}
+{#    <script src="{% static 'equipment/ext/additional-methods.min.js' %}"></script>#}
+{#    <script src="{% static 'equipment/ext/messages_ko.js' %}"></script>#}
+    <style>
+        .table>tbody>tr>td {
+            vertical-align: middle
+        }
+    </style>
+    <script>
+        // using jQuery
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        var csrftoken = getCookie('csrftoken');
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+
+    <div id="container" class="row">
+        <div id="sidebar" class="col-md-2">
+            <br><br>
+            <ul>
+                <li>
+                    <a href="{% url 'equipment:equip_list' %}">자산 관리</a>
+                </li>
+                <li>
+                    <a href="{% url 'equipment:code_list' %}">코드 관리</a>
+                </li>
+                <li>
+                    <a href="{% url 'equipment:pjt_list' %}">프로젝트 관리</a>
+                </li>
+            </ul>
+        </div>
+        <div id="main" class="col-md-9">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

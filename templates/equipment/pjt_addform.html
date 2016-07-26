@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="content">
+
+    <div class="row">
+        <div class="page-header">
+            <h2><a href="/">Home</a>&nbsp;&nbsp;>&nbsp;&nbsp;프로젝트 신규등록</h2>
+        </div>
+    </div>
+
+    <form action="{% url 'equipment:pjt_add' %}" method="post" id="register_form">
+    {% csrf_token %}
+    <div class="row">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td class="active">프로젝트명</td>
+                    <td colspan="3">
+                        <input type="text" class="form-control" id="project_name" name="project_name" value="" placeholder="프로젝트명" maxlength="30">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="active">시작일</td>
+                    <td><input type="text" class="form-control" id="start_ymd" name="start_ymd" value="" placeholder="yyyy-MM-dd" maxlength="10"></td>
+                    <td class="active">종료일</td>
+                    <td><input type="text" class="form-control" id="end_ymd" name="end_ymd" value="" placeholder="yyyy-MM-dd" maxlength="10"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4" align="left">
+            <button type="button" class="btn btn-default" id="go_back">돌아가기</button>
+        </div>
+        <div class="col-md-8" align="right">
+            <button type="submit" class="btn btn-primary" id="project_add" name="code_add">등록</button>
+        </div>
+    </div>
+
+    </form>
+
+</div>
+
+<script src="{% static 'equipment/equipment.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $(document).on("click", "#project_add", project_add);
+        $(document).on("click", "#go_back", doGoBack);
+    });
+</script>
+
+{% endblock %}

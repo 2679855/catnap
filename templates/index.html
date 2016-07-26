@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="content">
+
+    <div class="row">
+        <div class="page-header">
+            <h2>관리 기능</h2>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <th>구분</th>
+                <th>설명</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><button type="submit" class="btn btn-primary" id="equip_mgmt" name="equip_mgmt">자산 관리</button></td>
+                    <td>각종 자산 정보를 관리합니다.</td>
+                </tr>
+                <tr>
+                    <td><button type="submit" class="btn btn-primary" id="code_mgmt" name="code_mgmt">코드 관리</button></td>
+                    <td>
+                        자산 정보와 관련된 코드 종류와 각 코드 종류별 코드 값을 관리합니다. <br>
+                        자산의 종류, 제조사, 자산 상태 등의 세부 항목을 관리할 수 있습니다.
+                    </td>
+                </tr>
+                <tr>
+                    <td><button type="submit" class="btn btn-primary" id="pjt_mgmt" name="pjt_mgmt">프로젝트 관리</button></td>
+                    <td>수행 프로젝트 정보를 관리합니다. 개별 자산은 하나의 수행 프로젝트에 속하게 됩니다. </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(document).on("click", "#equip_mgmt", equip_mgmt);
+        $(document).on("click", "#code_mgmt", code_mgmt);
+        $(document).on("click", "#pjt_mgmt", pjt_mgmt);
+    });
+    var equip_mgmt = function () {
+        location.href = "{% url 'equipment:equip_list' %}"
+    };
+    var code_mgmt = function () {
+        location.href = "{% url 'equipment:code_list' %}"
+    };
+    var pjt_mgmt = function () {
+        location.href = "{% url 'equipment:pjt_list' %}"
+    };
+</script>
+
+{% endblock %}

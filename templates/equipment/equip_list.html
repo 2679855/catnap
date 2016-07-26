@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="content">
+
+    <div class="row">
+        <div class="page-header">
+            <h2><a href="/">Home</a>&nbsp;&nbsp;>&nbsp;&nbsp;자산 목록</h2>
+        </div>
+    </div>
+    <div class="row">
+        <form action="{% url 'equipment:equip_list' %}" method="get" id="list_form">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="active">자산분류</td>
+                    <td>
+                        <select id="equipment_code" name="equipment_code" class="selectpicker show-tick form-control" data-live-search="true" title="자산 분류 선택" data-live-search-placeholder="Search...">
+                            <option value="" {% if request.GET.equipment_code %}{% else %}selected{% endif %}>전체</option>
+                            {% if type_list %}
+                                {% for type in type_list %}
+                                    <option value="{{ type.id }}" {% if request.GET.equipment_code|stringformat:"s" == type.id|stringformat:"s" %}selected{% endif %}>{{ type.code_name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </td>
+                    <td class="active">자산 상태</td>
+                    <td>
+                        <select id="state_code" name="state_code" class="selectpicker show-tick form-control" data-live-search="true" title="자산 상태 선택" data-live-search-placeholder="Search...">
+                            <option value="" {% if request.GET.state_code %}{% else %}selected{% endif %}>전체</option>
+                            {% if state_list %}
+                                {% for state in state_list %}
+                                    <option value="{{ state.id }}" {% if request.GET.state_code|stringformat:"s" == state.id|stringformat:"s" %}selected{% endif %}>{{ state.code_name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </td>
+                    <td class="active">프로젝트</td>
+                    <td>
+                        <select id="project_code" name="project_code" class="selectpicker show-tick form-control" data-live-search="true" title="프로젝트 선택" data-live-search-placeholder="Search...">
+                            <option value="" {% if request.GET.project_code %}{% else %}selected{% endif %}>전체</option>
+                            {% if project_list %}
+                                {% for project in project_list %}
+                                    <option value="{{ project.id }}" {% if request.GET.project_code|stringformat:"s" == project.id|stringformat:"s" %}selected{% endif %}>{{ project.project_name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </td>
+                    <td class="active">사용자</td>
+                    <td>
+                        <input type="text" class="form-control" id="user_name" name="user_name" value="{{ request.GET.user_name }}" placeholder="사용자 이름" maxlength="20">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4" align="left">
+            <button type="button" class="btn btn-primary" id="equip_csv">CSV 내려받기</button>
+        </div>
+        <div class="col-md-8" align="right">
+            <button type="button" class="btn btn-primary" id="equip_addform">자산 등록</button>
+            <button type="button" class="btn btn-primary" id="equip_list">검색</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <br/>
+        <div align="center">총 {{ total_count }} 건이 검색되었습니다.</div>
+        <br/>
+        <table class="table table-hover">
+            <thead>
+                <th width="9%">자산분류</th>
+                <th width="22%">자산명</th>
+                <th width="22%">시리얼번호</th>
+                <th width="10%">취득일</th>
+                <th width="10%">취득가격</th>
+                <th width="8%">사용여부</th>
+                <th width="10%">등록일</th>
+                <th width="7%">사용자</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        {% include page_template %}
+    </div>
+
+</div>
+
+    <script src="{% static 'equipment/equipment.js' %}"></script>
+    <script src="{% static 'equipment/ext/el-pagination.js' %}"></script>
+    <script>
+        $.endlessPaginate({
+            paginateOnScroll: true,
+            paginateOnScrollMargin: 10,
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", "#equip_addform", equip_addform);
+            $(document).on("click", "#equip_list", equip_list);
+            $(document).on("click", "#equip_csv", equip_csv);
+        });
+        var equip_addform = function () {
+            location.href = "{% url 'equipment:equip_addform' %}"
+        };
+        var equip_list = function () {
+            $("#list_form").attr('action', '{% url "equipment:equip_list" %}');
+            $("#list_form").submit();
+        };
+        var equip_csv = function () {
+            $("#list_form").attr('action', '{% url "equipment:equip_csv" %}');
+            $("#list_form").submit();
+        };
+    </script>
+
+{% endblock %}
+

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="content">
+
+    <div class="row">
+        <div class="page-header">
+            <h2><a href="/">Home</a>&nbsp;&nbsp;>&nbsp;&nbsp;코드 관리</h2>
+        </div>
+    </div>
+    <div class="row">
+        <form action="{% url 'equipment:code_list' %}" method="get" id="list_form">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="active">코드 분류</td>
+                    <td>
+                        <select id="code_category_id" name="code_category_id" class="selectpicker show-tick form-control" data-live-search="true" title="코드 분류 선택" data-live-search-placeholder="Search...">
+                            <option value="" {% if request.GET.code_category_id %}{% else %}selected{% endif %}>전체</option>
+                            {% if code_category_list %}
+                                {% for code_category in code_category_list %}
+                                    <option value="{{ code_category.id }}" {% if request.GET.code_category_id|stringformat:"s" == code_category.id|stringformat:"s" %}selected{% endif %}>{{ code_category.category_name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </td>
+                    <td class="active">코드명</td>
+                    <td>
+                        <input type="text" class="form-control" id="code_name" name="code_name" value="{{ request.GET.code_name }}" placeholder="코드명" maxlength="20">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div align="right">
+        <button type="button" class="btn btn-primary" id="code_addform">코드 등록</button>
+        <button type="button" class="btn btn-primary" id="code_list">검색</button>
+    </div>
+
+    <div class="row">
+        <br/>
+        <div align="center">총 {{ total_count }} 건이 검색되었습니다.</div>
+        <br/>
+        <table class="table table-hover">
+            <thead>
+                <th width="30%">코드 분류</th>
+                <th width="30%">코드명</th>
+                <th width="40%">수정</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        {% include page_template %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <form action="" method="post" id="register_form">
+{#                    {% csrf_token %}#}
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                            <tr>
+                                <td class="active">코드 분류</td>
+                                <td>
+                                    <input type="hidden" class="form-control" id="modal_code_id" name="modal_code_id" value="">
+                                    <span id="code_category_list"/></td>
+                                <td class="active">코드명</td>
+                                <td><input type="text" class="form-control" id="modal_code_name" name="modal_code_name" value="" maxlength="100"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="code_upd">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="{% static 'equipment/equipment.js' %}"></script>
+<script src="{% static 'equipment/ext/el-pagination.js' %}"></script>
+<script>
+    $.endlessPaginate({
+        paginateOnScroll: true,
+        paginateOnScrollMargin: 10,
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $(document).on("click", "#code_addform", code_addform);
+        $(document).on("click", "#code_list", code_list);
+        $(document).on("click", "#code_updform", code_updform);
+        $(document).on("click", "#code_upd", code_upd);
+    });
+    var code_addform = function () {
+        location.href = "{% url 'equipment:code_addform' %}"
+    };
+    var code_list = function () {
+        $("#list_form").submit();
+    };
+</script>
+
+{% endblock %}

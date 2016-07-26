@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="content">
+
+    <div class="row">
+        <div class="page-header">
+            <h2><a href="/">Home</a>&nbsp;&nbsp;>&nbsp;&nbsp;코드 신규등록</h2>
+        </div>
+    </div>
+
+    <form action="{% url 'equipment:code_add' %}" method="post" id="register_form">
+    {% csrf_token %}
+    <div class="row">
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <td class="active">코드분류</td>
+                <td>
+                    {% if code_category_list %}
+                        <select id="code_category_id" name="code_category_id" class="selectpicker show-tick form-control" data-live-search="true" title="코드 분류 선택" data-live-search-placeholder="Search...">
+                        {% for code_category in code_category_list %}
+                            <option value="{{ code_category.id }}">{{ code_category.category_name }}</option>
+                        {% endfor %}
+                        </select>
+                    {% else %}
+                        등록된 코드 분류가 없습니다. 먼저 등록하세요.
+                    {% endif %}
+                </td>
+                <td class="active">코드명</td>
+                <td><input type="text" class="form-control" id="code_name" name="code_name" value="" maxlength="30"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4" align="left">
+            <button type="button" class="btn btn-default" id="go_back">돌아가기</button>
+        </div>
+        <div class="col-md-8" align="right">
+            <button type="submit" class="btn btn-primary" id="code_add" name="code_add">등록</button>
+        </div>
+    </div>
+    </form>
+
+</div>
+
+<script src="{% static 'equipment/equipment.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $(document).on("click", "#code_add", code_add);
+        $(document).on("click", "#go_back", doGoBack);
+    });
+</script>
+
+{% endblock %}

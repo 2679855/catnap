@@ -1,0 +1,29 @@
+{% load humanize %}
+{% load el_pagination_tags %}
+{% paginate latest_equipment_list %}
+
+<table class="table table-hover">
+    <tbody>
+{% for equipment in latest_equipment_list %}
+    <tr>
+        <td width="9%">{{ equipment.equipment_code.code_name }}</td>
+        <td width="22%"><a href="{% url 'equipment:equip_view' equipment.id %}">{{ equipment.manufacturer_code.code_name }} {{ equipment.model_no }}</a></td>
+        <td width="22%">{{ equipment.serial_no }}</td>
+        <td width="10%">{{ equipment.purchase_ymd|slice:'0:4' }}-{{ equipment.purchase_ymd|slice:'4:6' }}-{{ equipment.purchase_ymd|slice:'6:8' }}</td>
+        <td width="10%">{{ equipment.purchase_price|intcomma }}</td>
+        <td width="8%">{{ equipment.state_code.code_name }}</td>
+        <td width="10%">{{ equipment.registered_date|date:'Y-m-d' }}</td>
+        <td width="7%">
+            {% if equipment.history_set.exists %}
+                {% for hist in equipment.history_set.iterator %}
+                    {% if hist.end_ymd == equipment.max_id %}
+                        {{ hist.user_name }}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+    </tbody>
+</table>
+{% show_more "더 보기" "불러오고 있습니다." %}
